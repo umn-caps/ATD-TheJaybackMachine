@@ -199,39 +199,6 @@ class Update(threading.Thread):
                 assignment.edit(assignment={'unlock_at': unlock_date})
                 update_log(f"{str(assignment.name)} NEW until date: {str(assignment.unlock_at_date)}") 
 
-    # Function for Quiz Spring Break Lock-At "Availible Until" date shift
-    def sb_quiz_lock_at_shift(self, quiz, week_start, spring_break_status:int):
-        if quiz.lock_at != None:
-            lock_date = arrow.get(quiz.lock_at_date).to("US/Central")
-            
-            if lock_date > week_start:
-                update_log(f"{quiz.title} OLD availible from date: {str(quiz.lock_at_date)}") 
-                lock_date = self.sb_date_shift(lock_date, spring_break_status)
-                quiz.edit(quiz={'lock_at':lock_date})
-                update_log(f"{str(quiz.title)} NEW availible from date: {str(quiz.lock_at_date)}")
-                    
-    # Function for Quiz Spring Break Due date shift
-    def sb_quiz_due_date_shift(self, quiz, week_start, spring_break_status:int):
-        if quiz.due_at != None:
-            due_date = arrow.get(quiz.due_at_date).to("US/Central")
-
-            if due_date > week_start:
-                update_log(f"{str(quiz.title)} OLD due date: {str(quiz.due_at_date)}") 
-                due_date = self.sb_date_shift(due_date, spring_break_status)
-                quiz.edit(quiz={'due_at':due_date})
-                update_log(f"{str(quiz.title)} NEW due date: {str(quiz.due_at_date)}") 
-                    
-    # Function for Quiz Spring Break Unlock-At "Availible From" date shift
-    def sb_quiz_unlock_at_shift(self, quiz, week_start, spring_break_status:int):
-        if quiz.unlock_at != None:
-            unlock_date = arrow.get(quiz.unlock_at_date).to("US/Central")
-            
-            if unlock_date > week_start:
-                update_log(f"{quiz.title} OLD until date: {str(quiz.unlock_at_date)}") 
-                unlock_date = self.sb_date_shift(unlock_date, spring_break_status)
-                quiz.edit(quiz={'unlock_at': unlock_date})
-                update_log(f"{str(quiz.title)} NEW until date: {str(quiz.unlock_at_date)}") 
-
     # Function for Spring Break To-do date shift
     def sb_todo_shift(self, page, week_start, spring_break_status:int):
         if page.todo_date != None:
@@ -251,7 +218,6 @@ class Update(threading.Thread):
                 self.sb_todo_shift(page, week_start, spring_break_status)
 
         to_assignments = to_course.get_assignments(per_page=200)
-        to_quizzes = to_course.get_quizzes(per_page=200)
         to_pages = to_course.get_pages(per_page=200)
 
         week_start = datetime.fromisoformat(to_start_date)
@@ -266,10 +232,6 @@ class Update(threading.Thread):
                 self.sb_assignment_unlock_at_shift(assignment, week_start, spring_break_status)
                 self.sb_assignment_due_date_shift(assignment, week_start, spring_break_status)
                 self.sb_assignment_lock_at_shift(assignment, week_start, spring_break_status)
-            for quiz in to_quizzes:
-                self.sb_quiz_unlock_at_shift(quiz, week_start, spring_break_status)
-                self.sb_quiz_due_date_shift(quiz, week_start, spring_break_status)
-                self.sb_quiz_lock_at_shift(quiz, week_start, spring_break_status)
             
             shift_pages(to_pages, week_start, spring_break_status)
             update_log("Completed shifting dates from Spring Break removal") 
@@ -281,10 +243,6 @@ class Update(threading.Thread):
                 self.sb_assignment_lock_at_shift(assignment, week_start, spring_break_status)
                 self.sb_assignment_due_date_shift(assignment, week_start, spring_break_status)
                 self.sb_assignment_unlock_at_shift(assignment, week_start, spring_break_status)
-            for quiz in to_quizzes:
-                self.sb_quiz_lock_at_shift(quiz, week_start, spring_break_status)
-                self.sb_quiz_due_date_shift(quiz, week_start, spring_break_status)
-                self.sb_quiz_unlock_at_shift(quiz, week_start, spring_break_status)
             
             shift_pages(to_pages, week_start, spring_break_status)
             update_log("Completed shifting dates from Spring Break addition")
