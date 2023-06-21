@@ -172,10 +172,10 @@ class Update(threading.Thread):
             lock_date = arrow.get(assignment.lock_at_date).to("US/Central")
             
             if lock_date > week_start:
-                update_log(f"{assignment.name} OLD availible from date: {str(assignment.lock_at_date)}") 
+                update_log(f"{assignment.name} OLD available from date: {str(assignment.lock_at_date)}") 
                 lock_date = self.sb_date_shift(lock_date, spring_break_status)
                 assignment.edit(assignment={'lock_at':lock_date})
-                update_log(f"{str(assignment.name)} NEW availible from date: {str(assignment.lock_at_date)}")
+                update_log(f"{str(assignment.name)} NEW available from date: {str(assignment.lock_at_date)}")
                     
     # Function for Assignment Spring Break Due date shift
     def sb_assignment_due_date_shift(self, assignment, week_start, spring_break_status:int):
