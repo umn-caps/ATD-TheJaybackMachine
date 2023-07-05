@@ -2,6 +2,8 @@
 
 The Jayback Machine: Canvas Migration and Update Automation Script (or "The Jayback Machine" for short) is a script that was was developed in-house by Academic Technology and Design staff to migrate and update Canvas Learning Management System course sites for the University of Minnesota's College of Continuing and Professional Studies.
 
+To read the user documentation see [The Jayback Machine: User Documentation](https://sites.google.com/umn.edu/jaybackmachinedocumentation/home?authuser=1).
+
 Specifically, the script opens a GUI that has fields that has the user to authenticate themselves to use the Canvas API with their access token as well as the minimum needed varibles for the migration and updates of courses. 
 
 The first step of the with is the migration: 
