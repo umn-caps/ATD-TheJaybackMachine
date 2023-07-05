@@ -41,10 +41,10 @@ Arrow is "a Python library that offers a sensible and human-friendly approach to
 ### BeautifulSoup
 
 ## Credits
-Avery Pierce-McGovern <mcgovera@umn.edu>, Project Lead/Project Manager
-Paul McLagan <mclag011@umn.edu>, Project Lead/Lead Programmer and Designer
-Annika Moe <moex0125@umn.edu>, Key Developer 
-Nichole Salinas <sali0137@umn.edu>, Developer
+* Avery Pierce-McGovern <mcgovera@umn.edu>, Project Lead/Project Manager
+* Paul McLagan <mclag011@umn.edu>, Project Lead/Lead Programmer and Designer
+* Annika Moe <moex0125@umn.edu>, Key Developer 
+* Nichole Salinas <sali0137@umn.edu>, Developer
 
 
 
