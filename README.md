@@ -17,28 +17,41 @@ Next, the update component of the script:
 * If the course is moving to or from a Spring sememster course, the script will add/remove the Spring break module and shift the dates for pages, assignments, quizzes and dicussions 
 
 ## Parts of the Script
-### CanvasAutomation.py
+### Initialization Script: CanvasAutomation.py
 The main() function of the script runs out of CanvasAutomation.py. Here it creates the root for the tkinter window (more info under GUI) and also the App Class that initializes the GUI that connects to other parts of the script. 
 
-### GUI
-automationGUI.py tkinter window graphical user interface (GUI) with the buttons and input fields to make the script function. The tkinter GUI uses the tkinter theme extention ttkbootstrap (more infomation below). This script lays out the parts of the window and also triggers the work of the script that is done for the Migration (automationMigration.py) and Update (automationUpdate.py) 
+### GUI: automationGUI.py
+automationGUI.py tkinter window graphical user interface (GUI) with the buttons and input fields to make the script function. The tkinter GUI uses the tkinter theme extention ttkbootstrap (more infomation below). This script lays out the parts of the window and also triggers the work of the script that is done for the Migration (automationMigration.py) and Update (automationUpdate.py)
 
-### Global Variables
-The Python script automationVariables.py contains a place with Global Variables that are used across the script. Here is a description of what 
+### Migration Script: automationMigration.py
+automationMigration.py houses the classes for single and multiple course migrations.
+
+### Update Script: automationUpdate.py
+automationUpdate.py houses the classes for single and multiple course updates.
+
+### Logging Script: automationLogging.py
+automationLogging.py runs the logging part of the script that sends information of the progress in the script to the log window in the GUI. It is heavily based on the [logging script setup by Jason Brownlee](https://superfastpython.com/thread-safe-logging-in-python/).
+
+### Global Variables: automationVariables.py
+The Python script automationVariables.py contains a place with Global Variables that are used across the script. There is also a place for variables that can be changed to put the script in testing mode which allows for a preset of the API Access Token as well as the course ids and starting dates for TO and FROM courses.
 
 ## Dependancies
-Below is a list of the Python dependencies and libraries that are needed to make the script run
+Below is a list of the Python dependencies and libraries that are needed to make the script run. Each of the links to the dependencies can further explain how to install them as well as how to use the libraries in the script.
 
 ### CanvasAPI (formerly PyCanvas)
-According to [their GitHub page](https://github.com/ucfopen/canvasapi) “Python API wrapper for Instructure's Canvas LMS. Easily manage courses, users, gradebooks, and more.” Rather than making an infrastructure for REST API calls to Canvas, this library has various classes make scripts more simple
+According to [the CanvasAPI GitHub page](https://github.com/ucfopen/canvasapi) “Python API wrapper for Instructure's Canvas LMS. Easily manage courses, users, gradebooks, and more.” Rather than making an infrastructure for REST API calls to Canvas, this library has various classes make scripts more simple. This is the backbone for how the migration and update components of the script commuincates with the Canvas LMS.
 
 ### ttkbootstrap
-[ttkbootstrap](https://ttkbootstrap.readthedocs.io/en/latest/) is “A supercharged theme extension for tkinter that enables on-demand modern flat style themes inspired by Bootstrap.” This was used to make theming and coloring easier. It comes with a preset of themes which made making a good looking product easier than with tkinter alone.
+[ttkbootstrap](https://ttkbootstrap.readthedocs.io/en/latest/) is “A supercharged theme extension for tkinter that enables on-demand modern flat style themes inspired by Bootstrap.” This was used to make theming and coloring easier with tkinter. It comes with a preset of themes which made making a good looking product easier than with tkinter alone.
 
 ### Arrow
-Arrow is "a Python library that offers a sensible and human-friendly approach to creating, manipulating, formatting and converting dates, times and timestamps." Arrow is used for the Spring Break date shifting in the Update script, acting as the brains to manage daylight savings and timezones as a part of the date shifts.
+[Arrow](https://arrow.readthedocs.io/en/latest/) is "a Python library that offers a sensible and human-friendly approach to creating, manipulating, formatting and converting dates, times and timestamps." Arrow is used for the Spring Break date shifting in the Update script, acting as the brains to manage daylight savings and timezones as a part of the date shifts.
 
 ### BeautifulSoup
+[BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) "is a Python library for pulling data out of HTML and XML files." It is used in the script to find and replace the page id in URLs in pages for the Library Course page.
+
+### pandas
+pandas "is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language." It allows for the creation of spreadsheets that can be manipulated in Python. pandas is used for the multiple course update features since that is how imported spreadsheets are read and is also how the script tracks the progress of migrations in Canvas.
 
 ## Credits
 * Avery Pierce-McGovern <mcgovera@umn.edu>, Project Lead/Project Manager
