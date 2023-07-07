@@ -2,8 +2,6 @@
 
 The Jayback Machine: Canvas Migration and Update Automation Script (or "The Jayback Machine" for short) is a script that was was developed in-house by Academic Technology and Design staff to migrate and update Canvas Learning Management System course sites for the University of Minnesota's College of Continuing and Professional Studies.
 
-To read the user documentation see [The Jayback Machine: User Documentation](https://sites.google.com/umn.edu/jaybackmachinedocumentation/home?authuser=1).
-
 Specifically, the script opens a GUI that has fields that has the user to authenticate themselves to use the Canvas API with their access token as well as the minimum needed varibles for the migration and updates of courses. 
 
 The first step of the with is the migration: 
@@ -15,6 +13,8 @@ Next, the update component of the script:
 * Clears extra spaces in titles for modules, pages, assignments, quizzes and discussions.
 * If a course uses week-spans in the title, the modules are re-titled to contain the dates for the week-spans in the new course.
 * If the course is moving to or from a Spring sememster course, the script will add/remove the Spring break module and shift the dates for pages, assignments, quizzes and dicussions 
+
+To read the user documentation see [The Jayback Machine: User Documentation](https://sites.google.com/umn.edu/jaybackmachinedocumentation/home?authuser=1).
 
 ## Parts of the Script
 ### Initialization Script: CanvasAutomation.py
@@ -58,6 +58,3 @@ pandas "is a fast, powerful, flexible and easy to use open source data analysis 
 * Paul McLagan <mclag011@umn.edu>, Project Lead/Lead Programmer and Designer
 * Annika Moe <moex0125@umn.edu>, Key Developer 
 * Nichole Salinas <sali0137@umn.edu>, Developer
-
-
-
