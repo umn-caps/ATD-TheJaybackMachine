@@ -12,7 +12,8 @@ The first step of the with is the migration:
 Next, the update component of the script:
 * Clears extra spaces in titles for modules, pages, assignments, quizzes and discussions.
 * If a course uses week-spans in the title, the modules are re-titled to contain the dates for the week-spans in the new course.
-* If the course is moving to or from a Spring sememster course, the script will add/remove the Spring break module and shift the dates for pages, assignments, quizzes and dicussions 
+* If the course is moving to or from a Spring sememster course, the script will add/remove the Spring break module and shift the dates for pages, assignments, quizzes and dicussions
+* Pages that have links to the Library Course Page will have the Course ID changed in the link to make sure the links work in the new course. 
 
 To read the user documentation see [The Jayback Machine: User Documentation](https://sites.google.com/umn.edu/jaybackmachinedocumentation/home?authuser=1).
 
