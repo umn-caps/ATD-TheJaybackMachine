@@ -94,7 +94,8 @@ class App:
 
 # Main loop
 if __name__ == '__main__':
-    # Saving long log file (overwrites old long log each time app runs) and setting up configuration for Logging object
+    # Saving long log file and setting up configuration for Logging object.
+    # Overwrites old long log each time app runs
     log_file_name = f"{os.getcwd()}/logs/logging.log"
     os.makedirs(os.path.dirname(log_file_name), exist_ok=True)
     logging.basicConfig(filename=log_file_name, 
@@ -107,7 +108,10 @@ if __name__ == '__main__':
                       themename=APP_TTK_THEME,
                       resizable=['false','false'],
                       size=APP_TTK_WINDOW_SIZE)
-    root.iconbitmap("favicon.ico")
+    try:
+        root.iconbitmap("favicon.ico")
+    except:
+        pass
 
     app = App(root)
     app.root.mainloop()

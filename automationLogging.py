@@ -5,7 +5,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from ttkbootstrap import ScrolledText, Frame
 
-# Creates logger for the instance.
+# Creates logger for the instance
 logger = logging.getLogger(__name__)
 
 # Updates the log

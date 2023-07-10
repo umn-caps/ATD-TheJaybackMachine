@@ -12,6 +12,7 @@ from automationLogging import *
 from automationMigration import MigrateSingleCourse, MigrateMultiCourses
 from automationUpdate import UpdateSingleCourse, UpdateMultiCourses
 
+# Initializes GUI fields for required variables to run script
 class RequiredInput:
     def __init__(self, frame):
         self.frame = frame
@@ -53,6 +54,7 @@ class RequiredInput:
         start_date = str(parser.parse(start_date))
         return start_date
 
+# Initializes GUI fields for script options
 class Options:
     def __init__(self, frame):
         self.frame = frame
@@ -84,7 +86,7 @@ class Options:
         else:
             self.sb_weeks_to_start_entry["state"] = "disabled"
 
-
+# Initializes GUI buttons for the mode of how the script runs.
 class ModeButtons:
     def __init__(self, frame, single_update_input, multi_update_input):
         self.frame = frame
@@ -129,7 +131,7 @@ class ModeButtons:
         self.single_update_input.disable()
         self.multi_update_input.enable()
 
-
+# Initializes GUI buttons that will run an API Token check, the migration script and the update script
 class RunButtons:
     def __init__(self, frame, root, main_app, mode_buttons, required_input, options_input, single_update_input, multi_update_input):
         self.frame = frame
@@ -163,6 +165,7 @@ class RunButtons:
                                               command=self.check_api_token)
         self.check_api_token_btn.pack(side=RIGHT, padx=(0, 0))
 
+    # Checks if the API Token is usable before running the migration or update script
     def check_api_token(self):
         try:
             canvas = Canvas(API_URL, self.required_input.api_token.get())
@@ -243,7 +246,7 @@ class RunButtons:
         self.main_app.save_simple_log()
         self.root.destroy()
 
-
+# Initializes GUI fields for single course migration/update input fields
 class SingleUpdateInput:
     def __init__(self, frame):
         self.frame = frame
@@ -314,6 +317,7 @@ class SingleUpdateInput:
         start_date = str(parser.parse(start_date))
         return start_date
 
+# Initializes GUI fields for multiple course update input fields
 class MultiUpdateInput:
     def __init__(self, frame):
         self.frame = frame
