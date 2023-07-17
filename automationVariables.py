@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime
 
 API_URL = "https://canvas.umn.edu"
 DAYS_TO_SPRING_BREAK_START = 50
@@ -18,8 +18,5 @@ LIBRARY_EXT_REGEX = '(?<=courses\/)\d{6,}(?=\/external_tools\/12142)'
 FROM_DATEENTRY_START_DATE = datetime.today()
 TO_DATEENTRY_START_DATE = datetime.today()
 
-
 # Test Variables
 IS_TESTING = False
-FROM_CRS = None
-TO_CRS = None
