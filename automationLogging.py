@@ -31,7 +31,7 @@ class ConsoleUi:
         textbox_row = Frame(frame)
         textbox_row.pack(fill=X, expand=YES, pady=(15, 0))
 
-        self.scrolled_text = ScrolledText(textbox_row, state='disabled', height=12)
+        self.scrolled_text = ScrolledText(textbox_row, state='disabled', height=15)
         self.scrolled_text.pack(side=TOP,fill=BOTH)
         
         # Logging Default Color Coding
