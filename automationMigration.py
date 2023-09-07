@@ -1,5 +1,4 @@
 import threading
-import pandas as pd
 import arrow
 from time import sleep
 from canvasapi import Canvas, course
