@@ -29,10 +29,10 @@ class ConsoleUi:
         
         # Create a ScrolledText wdiget
         textbox_row = Frame(frame)
-        textbox_row.pack(fill=X, expand=YES, pady=(15, 0))
+        textbox_row.pack(fill=X, expand=YES, pady=(0, 0))
 
-        self.scrolled_text = ScrolledText(textbox_row, state='disabled', height=15)
-        self.scrolled_text.pack(side=TOP,fill=BOTH)
+        self.scrolled_text = ScrolledText(textbox_row, state='disabled', height=100)
+        self.scrolled_text.pack(fill=BOTH, expand=YES, pady=(0, 0))
         
         # Logging Default Color Coding
         self.scrolled_text.tag_config('INFO', foreground='white')
