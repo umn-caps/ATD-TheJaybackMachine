@@ -25,10 +25,10 @@ The main() function of the script runs out of CanvasAutomation.py. Here it creat
 automationGUI.py tkinter window graphical user interface (GUI) with the buttons and input fields to make the script function. The tkinter GUI uses the tkinter theme extention ttkbootstrap (more infomation below). This script lays out the parts of the window and also triggers the work of the script that is done for the Migration (automationMigration.py) and Update (automationUpdate.py)
 
 ### Migration Script: automationMigration.py
-automationMigration.py houses the classes for single and multiple course migrations.
+automationMigration.py houses the classes for single course migrations.
 
 ### Update Script: automationUpdate.py
-automationUpdate.py houses the classes for single and multiple course updates.
+automationUpdate.py houses the classes for single course updates.
 
 ### Logging Script: automationLogging.py
 automationLogging.py runs the logging part of the script that sends information of the progress in the script to the log window in the GUI. It is heavily based on the [logging script setup by Jason Brownlee](https://superfastpython.com/thread-safe-logging-in-python/).
@@ -50,9 +50,6 @@ According to [the CanvasAPI GitHub page](https://github.com/ucfopen/canvasapi) â
 
 ### BeautifulSoup
 [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) "is a Python library for pulling data out of HTML and XML files." It is used in the script to find and replace the page id in URLs in pages for the Library Course page.
-
-### pandas
-pandas "is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language." It allows for the creation of spreadsheets that can be manipulated in Python. pandas is used for the multiple course update features since that is how imported spreadsheets are read and is also how the script tracks the progress of migrations in Canvas.
 
 ## Credits
 * Avery Pierce-McGovern <mcgovera@umn.edu>, Project Lead/Project Manager
