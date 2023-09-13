@@ -191,12 +191,6 @@ class RequiredCourseInput:
         start_date = self.from_start_date_entry.entry.get()
         start_date = str(parser.parse(start_date))
         return start_date
-    
-
-        self.check_to_course_btn = ttk.Button(to_input_row,
-                                              text="Check", 
-                                              command=lambda: self.check_course_name(self.to_course.get(), 1))
-        self.check_to_course_btn.pack(side=LEFT, padx=(15, 0))
 
     # Get FROM Course Start Date from Field formatted to datetime in US/Central Time
     def get_from_start_date(self):
@@ -294,25 +288,6 @@ class Options:
                                                    wrap=True)
         self.sb_weeks_to_start_entry.pack(side=LEFT, fill=X)
         self.sb_weeks_to_start_entry["state"] = "disabled"
-
-        # Remove Title Spaces Options
-        self.remove_title_spaces_checkbtn_value = ttk.IntVar(value=1)
-
-        self.remove_title_spaces_checkbtn = ttk.Checkbutton(row1, text="Remove Title Spaces",
-                                                            onvalue=1, offvalue=0,
-                                                            variable=self.remove_title_spaces_checkbtn_value)
-        self.remove_title_spaces_checkbtn.pack(side=LEFT, fill=X, padx=(15, 0))
-        self.remove_title_spaces_checkbtn.state(['!alternate'])
-
-        # Change Library Course Page Links Option
-        self.library_links_checkbtn_value = ttk.IntVar(value=1)
-
-        self.library_links_checkbtn = ttk.Checkbutton(row1, text="Change Library Course Page Links",
-                                                      onvalue=1, offvalue=0,
-                                                      variable=self.library_links_checkbtn_value)
-        self.library_links_checkbtn.pack(side=LEFT, fill=X, padx=(15, 0))
-        self.library_links_checkbtn.state(['!alternate'])
-    
 
         # Remove Title Spaces Options
         self.remove_title_spaces_checkbtn_value = ttk.IntVar(value=1)
