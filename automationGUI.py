@@ -16,7 +16,8 @@ from automationUpdate import UpdateSingleCourse
 class AccessToken:
     def __init__(self, frame):
         self.frame = frame
-
+        self.api_token_ok = False
+ 
         # TTK Create and add API Access Token widget elements
         api_token_row = ttk.Frame(self.frame)
         api_token_row.pack(fill=X, expand=YES, pady=(0,0))
@@ -33,152 +34,24 @@ class AccessToken:
 
     # Checks if the API Token is usable before running the migration or update script
     def check_api_token(self):
-        
-        canvas = Canvas(API_URL, self.api_token.get())
-        current_user = canvas.get_current_user()
-        
-        try:
-            update_log(f"Hello {current_user.name}! You are ready to use the scripts.")
-            self.check_api_token_btn.config(bootstyle = "primary")
-            self.api_token_entry.config(bootstyle = "success")
-        except:
-            update_log("Access Token is not correct for Canvas access to use the scripts.")
-            self.api_token_entry_change()
-
-    def api_token_entry_change(self, *args):
-        self.check_api_token_btn.config(bootstyle = "success")
-        self.api_token_entry.config(bootstyle = "danger")
-
-# Initializes GUI fields for script options
-class Options:
-    def __init__(self, frame):
-        self.frame = frame
-        
-        row1 = ttk.Frame(self.frame)
-        row1.pack(fill=X, expand=YES, pady=(0,10))
-
-        # Sprink Break Options
-        self.sb_weeks_to_start_checkbtn_value = ttk.IntVar()
-
-        self.sb_weeks_to_start_checkbtn = ttk.Checkbutton(row1, text="Spring Break is on week:", 
-                                                          onvalue=1, offvalue=0,
-                                                          variable=self.sb_weeks_to_start_checkbtn_value,
-                                                          command=self.sb_weeks_to_start_entry_state)
-        self.sb_weeks_to_start_checkbtn.pack(side=LEFT, fill=X, padx=(0, 10))
-        self.sb_weeks_to_start_checkbtn.state(['!alternate'])
-
-        self.sb_start_week = ttk.StringVar(frame, value=8)
-
-        self.sb_weeks_to_start_entry = ttk.Spinbox(row1, textvariable=self.sb_start_week,
-                                                   width=10,
-                                                   from_=0, to=15,
-                                                   wrap=True)
-        self.sb_weeks_to_start_entry.pack(side=LEFT, fill=X)
-        self.sb_weeks_to_start_entry["state"] = "disabled"
-
-        # Remove Title Spaces Options
-        self.remove_title_spaces_checkbtn_value = ttk.IntVar(value=1)
-
-        self.remove_title_spaces_checkbtn = ttk.Checkbutton(row1, text="Remove Title Spaces",
-                                                            onvalue=1, offvalue=0,
-                                                            variable=self.remove_title_spaces_checkbtn_value)
-        self.remove_title_spaces_checkbtn.pack(side=LEFT, fill=X, padx=(15, 0))
-        self.remove_title_spaces_checkbtn.state(['!alternate'])
-
-        # Change Library Course Page Links Option
-        self.library_links_checkbtn_value = ttk.IntVar(value=1)
-
-        self.library_links_checkbtn = ttk.Checkbutton(row1, text="Change Library Course Page Links",
-                                                      onvalue=1, offvalue=0,
-                                                      variable=self.library_links_checkbtn_value)
-        self.library_links_checkbtn.pack(side=LEFT, fill=X, padx=(15, 0))
-        self.library_links_checkbtn.state(['!alternate'])
-    
-    def sb_weeks_to_start_entry_state(self):
-        if self.sb_weeks_to_start_checkbtn_value.get() == 1:
-            self.sb_weeks_to_start_entry["state"] = "normal"
+        if len(self.api_token_entry.get()) != 0:
+            canvas = Canvas(API_URL, self.api_token.get())
+            current_user = canvas.get_current_user()
+            
+            try:
+                update_log(f"Hello {current_user.name}! You are ready to use the scripts.")
+                self.api_token_entry.config(bootstyle = "success")
+                self.api_token_ok = True
+            except:
+                update_log("Access Token is not correct for Canvas access to use the scripts.")
+                self.api_token_entry.config(bootstyle = "danger")
+                self.api_token_ok = False
         else:
-            self.sb_weeks_to_start_entry["state"] = "disabled"
+            update_log("Access Token field is empty. Please enter Access Token.")
+            self.api_token_entry.config(bootstyle = "danger")
+            self.api_token_ok = False
+        
 
-
-# Initializes GUI buttons that will run an API Token check, the migration script and the update script
-class RunButtons:
-    def __init__(self, frame, root, main_app, api_token_input, options_input, course_input):
-        self.frame = frame
-        self.root = root
-        self.main_app = main_app
-        self.api_token_input = api_token_input
-        self.options_input = options_input
-        self.course_input = course_input
-
-        self.close_btn = ttk.Button(self.frame, 
-                                    text="Close", 
-                                    command=self.close)
-        self.close_btn.pack(side=RIGHT, padx=(10, 0))
-
-        self.start_update_btn = ttk.Button(self.frame, 
-                                           text="Start Updates", 
-                                           command=self.run_update)
-        self.start_update_btn.pack(side=RIGHT, padx=(10, 0))
-
-        self.start_migration_btn = ttk.Button(self.frame,
-                                              text="Start Migration", 
-                                              command=self.run_migration)
-        self.start_migration_btn.pack(side=RIGHT, padx=(10, 0))
-
-    # Run Migration script
-    def run_migration(self):    
-        self.disable_run_buttons()
-        
-        api_token = self.api_token_input.api_token.get()
-        
-        from_course_id = self.course_input.from_course.get()
-        from_start_date = self.course_input.get_from_start_date_str()
-
-        to_course_id = self.course_input.to_course.get()
-        to_start_date = self.course_input.get_to_start_date_str()
-        
-        migrate_single_course = MigrateSingleCourse(api_token, from_course_id, to_course_id, from_start_date, to_start_date)
-        migrate_single_course.start()
-        
-        self.enable_run_buttons()
-        
-    # Run Update script   
-    def run_update(self):        
-        self.disable_run_buttons()
-        
-        update_log("Update beginning. Please wait...")
-        
-        api_token = self.api_token_input.api_token.get()
-        sb_start_week = int(self.options_input.sb_start_week.get())
-        options = [self.options_input.remove_title_spaces_checkbtn_value.get(),
-                   self.options_input.library_links_checkbtn_value.get()]
-
-        from_course_id = self.course_input.from_course.get()
-        from_start_date = self.course_input.get_from_start_date_str()
-        
-        to_course_id = self.course_input.to_course.get()
-        to_start_date = self.course_input.get_to_start_date_str()
-        
-        update_single_course = UpdateSingleCourse(api_token, from_course_id, to_course_id, from_start_date, to_start_date, sb_start_week, options)
-        update_single_course.start()
-        
-        self.enable_run_buttons()
-        
-    # Disables Migration and Update run buttons
-    def enable_run_buttons(self):
-        self.start_migration_btn.config(state="normal")
-        self.start_update_btn.config(state="normal")
-
-    # Enables Migration and Update run buttons
-    def disable_run_buttons(self):
-        self.start_migration_btn.config(state="disabled")
-        self.start_update_btn.config(state="disabled")
-        
-    # Closes window and program. Saves simple log on close.
-    def close(self):
-        self.main_app.save_simple_log()
-        self.root.destroy()
 
 # Initializes GUI fields for single course migration/update input fields
 class RequiredCourseInput:
@@ -276,3 +149,162 @@ class RequiredCourseInput:
                 update_log("There is no course id entered for FROM Course ID")
             else:
                 update_log("There is no course id entered for TO Course ID")
+
+
+# Initializes GUI fields for script options
+class Options:
+    def __init__(self, frame):
+        self.frame = frame
+        
+        row1 = ttk.Frame(self.frame)
+        row1.pack(fill=X, expand=YES, pady=(0,10))
+
+        # Sprink Break Options
+        self.sb_weeks_to_start_checkbtn_value = ttk.IntVar()
+
+        self.sb_weeks_to_start_checkbtn = ttk.Checkbutton(row1, text="Spring Break is on week:", 
+                                                          onvalue=1, offvalue=0,
+                                                          variable=self.sb_weeks_to_start_checkbtn_value,
+                                                          command=self.sb_weeks_to_start_entry_state)
+        self.sb_weeks_to_start_checkbtn.pack(side=LEFT, fill=X, padx=(0, 10))
+        self.sb_weeks_to_start_checkbtn.state(['!alternate'])
+
+        self.sb_start_week = ttk.StringVar(frame, value=8)
+
+        self.sb_weeks_to_start_entry = ttk.Spinbox(row1, textvariable=self.sb_start_week,
+                                                   width=10,
+                                                   from_=0, to=15,
+                                                   wrap=True)
+        self.sb_weeks_to_start_entry.pack(side=LEFT, fill=X)
+        self.sb_weeks_to_start_entry["state"] = "disabled"
+
+        # Remove Title Spaces Options
+        self.remove_title_spaces_checkbtn_value = ttk.IntVar(value=1)
+
+        self.remove_title_spaces_checkbtn = ttk.Checkbutton(row1, text="Remove Title Spaces",
+                                                            onvalue=1, offvalue=0,
+                                                            variable=self.remove_title_spaces_checkbtn_value)
+        self.remove_title_spaces_checkbtn.pack(side=LEFT, fill=X, padx=(15, 0))
+        self.remove_title_spaces_checkbtn.state(['!alternate'])
+
+        # Change Library Course Page Links Option
+        self.library_links_checkbtn_value = ttk.IntVar(value=1)
+
+        self.library_links_checkbtn = ttk.Checkbutton(row1, text="Change Library Course Page Links",
+                                                      onvalue=1, offvalue=0,
+                                                      variable=self.library_links_checkbtn_value)
+        self.library_links_checkbtn.pack(side=LEFT, fill=X, padx=(15, 0))
+        self.library_links_checkbtn.state(['!alternate'])
+    
+    def sb_weeks_to_start_entry_state(self):
+        if self.sb_weeks_to_start_checkbtn_value.get() == 1:
+            self.sb_weeks_to_start_entry["state"] = "normal"
+        else:
+            self.sb_weeks_to_start_entry["state"] = "disabled"
+
+
+# Initializes GUI buttons that will run an API Token check, the migration script and the update script
+class RunButtons:
+    def __init__(self, frame, root, main_app, api_token_input, options_input, course_input):
+        self.frame = frame
+        self.root = root
+        self.main_app = main_app
+        self.api_token_input = api_token_input
+        self.options_input = options_input
+        self.course_input = course_input
+
+        self.close_btn = ttk.Button(self.frame, 
+                                    text="Close", 
+                                    command=self.close)
+        self.close_btn.pack(side=RIGHT, padx=(10, 0))
+
+        self.start_update_btn = ttk.Button(self.frame, 
+                                           text="Start Updates", 
+                                           command=self.run_update)
+        self.start_update_btn.pack(side=RIGHT, padx=(10, 0))
+
+        self.start_migration_btn = ttk.Button(self.frame,
+                                              text="Start Migration", 
+                                              command=self.run_migration)
+        self.start_migration_btn.pack(side=RIGHT, padx=(10, 0))
+
+    # Run Migration script
+    def run_migration(self):    
+        
+        if self.check_api_token() == True and self.check_course_ids() == True:
+            self.disable_run_buttons()
+            
+            api_token = self.api_token_input.api_token.get()
+            
+            from_course_id = self.course_input.from_course.get()
+            from_start_date = self.course_input.get_from_start_date_str()
+
+            to_course_id = self.course_input.to_course.get()
+            to_start_date = self.course_input.get_to_start_date_str()
+            
+            migrate_single_course = MigrateSingleCourse(api_token, from_course_id, to_course_id, from_start_date, to_start_date, self)
+            migrate_single_course.start()
+ 
+    # Run Update script   
+    def run_update(self):        
+
+        if self.check_api_token() == True and self.check_course_ids() == True:
+            self.disable_run_buttons()
+            
+            update_log("Update beginning. Please wait...")
+            
+            api_token = self.api_token_input.api_token.get()
+            sb_start_week = int(self.options_input.sb_start_week.get())
+            options = [self.options_input.remove_title_spaces_checkbtn_value.get(),
+                    self.options_input.library_links_checkbtn_value.get()]
+
+            from_course_id = self.course_input.from_course.get()
+            from_start_date = self.course_input.get_from_start_date_str()
+            
+            to_course_id = self.course_input.to_course.get()
+            to_start_date = self.course_input.get_to_start_date_str()
+            
+            update_single_course = UpdateSingleCourse(api_token, from_course_id, to_course_id, from_start_date, to_start_date, sb_start_week, options, self)
+            update_single_course.start()
+        
+    def check_api_token(self):
+        if self.api_token_input.api_token_ok == False:
+            update_log("Script cannot start until your Access Token is filled out or correct.")
+            self.danger_run_buttons()
+            return False
+        else:
+            self.normal_run_buttons()
+            return True
+
+    def check_course_ids(self):
+        if len(self.course_input.from_course.get()) < 6 or len(self.course_input.to_course.get()) < 6:
+            self.danger_run_buttons()
+            update_log("Script cannot begin until you check that your Access Token is correct.")
+            return False
+        else:
+            self.normal_run_buttons()
+            return True
+
+
+    # Disables Migration and Update run buttons
+    def enable_run_buttons(self):
+        self.start_migration_btn.config(state="normal")
+        self.start_update_btn.config(state="normal")
+
+    # Enables Migration and Update run buttons
+    def disable_run_buttons(self):
+        self.start_migration_btn.config(state="disabled")
+        self.start_update_btn.config(state="disabled")
+
+    def danger_run_buttons(self):
+        self.start_migration_btn.config(bootstyle = "danger")
+        self.start_update_btn.config(bootstyle = "danger")
+
+    def normal_run_buttons(self):
+        self.start_migration_btn.config(bootstyle = "normal")
+        self.start_update_btn.config(bootstyle = "normal")
+
+    # Closes window and program. Saves simple log on close.
+    def close(self):
+        self.main_app.save_simple_log()
+        self.root.destroy()
