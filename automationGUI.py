@@ -136,7 +136,7 @@ class RequiredCourseInput:
         start_date = str(parser.parse(start_date))
         return start_date
     
-    
+    # Checks the course name and print it in console
     def check_course_name(self, course_id, course_type):
         if course_id != "":
             api_token = self.api_token_input.api_token.get()
@@ -200,6 +200,7 @@ class Options:
         self.library_links_checkbtn.pack(side=LEFT, fill=X, padx=(15, 0))
         self.library_links_checkbtn.state(['!alternate'])
     
+    # Sets Spring Break Entry State
     def sb_weeks_to_start_entry_state(self):
         if self.sb_weeks_to_start_checkbtn_value.get() == 1:
             self.sb_weeks_to_start_entry["state"] = "normal"
@@ -248,7 +249,6 @@ class RunButtons:
             migrate_single_course = MigrateSingleCourse(api_token, from_course_id, to_course_id, from_start_date, to_start_date, self)
             migrate_single_course.start()
  
- 
     # Run Update script   
     def run_update(self):        
         if self.check_api_token() == True and self.check_course_ids() == True:
@@ -268,25 +268,26 @@ class RunButtons:
             
             update_single_course = UpdateSingleCourse(api_token, from_course_id, to_course_id, from_start_date, to_start_date, sb_start_week, options, self)
             update_single_course.start()
-        
+
+    # Checks API token before running migration or update     
     def check_api_token(self):
         if self.api_token_input.api_token_ok == False:
-            update_log("Script cannot start until your Access Token is filled out or correct.")
+            update_log("Script cannot start until your Access Token is entered or correct.")
             self.danger_run_buttons()
             return False
         else:
             self.normal_run_buttons()
             return True
 
+    # Checks to see if course ids have been filled out in Required Entry fields
     def check_course_ids(self):
         if len(self.course_input.from_course.get()) < 6 or len(self.course_input.to_course.get()) < 6:
             self.danger_run_buttons()
-            update_log("Script cannot begin until you check that your Access Token is correct.")
+            update_log("Script cannot begin until you check that your Access Token is entered or correct.")
             return False
         else:
             self.normal_run_buttons()
             return True
-
 
     # Disables Migration and Update run buttons
     def enable_run_buttons(self):
@@ -298,10 +299,12 @@ class RunButtons:
         self.start_migration_btn.config(state="disabled")
         self.start_update_btn.config(state="disabled")
 
+    # Sets run buttons to display red in "danger" mode. No other functionality.
     def danger_run_buttons(self):
         self.start_migration_btn.config(bootstyle = "danger")
         self.start_update_btn.config(bootstyle = "danger")
 
+    # Sets run buttons to display normally. No other functionality.
     def normal_run_buttons(self):
         self.start_migration_btn.config(bootstyle = "normal")
         self.start_update_btn.config(bootstyle = "normal")
