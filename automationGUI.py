@@ -16,8 +16,6 @@ from automationUpdate import UpdateSingleCourse
 
 # Initializes GUI fields for required variables to run script
 class AccessToken:
-# Initializes GUI fields for required variables to run script
-class AccessToken:
     def __init__(self, frame):
         self.frame = frame
         self.api_token_ok = False
@@ -102,7 +100,7 @@ class RequiredCourseInput:
         self.to_start_date_label = ttk.Label(to_input_row, text="Start Date")
         self.to_start_date_label.pack(side=LEFT, padx=(10, 10))
         
-        self.check_api_token_btn = ttk.Button(api_token_row,
+        self.check_api_token_btn = ttk.Button(to_input_row,
                                               text="Check", 
                                               command=self.check_api_token)
         self.check_api_token_btn.pack(side=RIGHT, padx=(15, 0))
@@ -344,7 +342,6 @@ class Options:
 # Initializes GUI buttons that will run an API Token check, the migration script and the update script
 # Initializes GUI buttons that will run an API Token check, the migration script and the update script
 class RunButtons:
-    def __init__(self, frame, root, main_app, api_token_input, options_input, course_input):
     def __init__(self, frame, root, main_app, api_token_input, options_input, course_input):
         self.frame = frame
         self.root = root
