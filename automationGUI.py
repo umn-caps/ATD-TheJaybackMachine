@@ -105,27 +105,7 @@ class RequiredCourseInput:
                                               text="Check", 
                                               command=lambda: self.check_course_name(self.to_course.get(), 1))
         self.check_api_token_btn.pack(side=RIGHT, padx=(15, 0))
-
-    # # Checks if the API Token is usable before running the migration or update script
-    # def check_api_token(self):
-    #     if len(self.api_token_entry.get()) != 0:
-    #         canvas = Canvas(API_URL, self.api_token.get())
-    #         current_user = canvas.get_current_user()
-            
-    #         try:
-    #             update_log(f"Hello {current_user.name}! You are ready to use the scripts.")
-    #             self.api_token_entry.config(bootstyle = "success")
-    #             self.api_token_ok = True
-    #         except:
-    #             update_log("Access Token is not correct for Canvas access to use the scripts.")
-    #             self.api_token_entry.config(bootstyle = "danger")
-    #             self.api_token_ok = False
-    #     else:
-    #         update_log("Access Token field is empty. Please enter Access Token.")
-    #         self.api_token_entry.config(bootstyle = "danger")
-    #         self.api_token_ok = False
-        
-
+     
     # Get FROM Course Start Date from Field formatted to datetime in US/Central Time
     def get_from_start_date(self):
         start_date = self.from_start_date_entry.entry.get()
