@@ -1,7 +1,6 @@
 import re
 import arrow
 import threading
-import pandas as pd
 from datetime import datetime, timedelta
 from canvasapi import Canvas
 from bs4 import BeautifulSoup
@@ -103,6 +102,9 @@ class Update(threading.Thread):
 
     # Function to change Library Course Page links in pages to match current Canvas course ID
     def link_change_library_cmp(self, to_course):
+        
+        update_log("Beginning changes to course id in links for Library Course Materials") 
+
         to_pages = to_course.get_pages(per_page=200)
 
         for page in to_pages:
@@ -249,7 +251,7 @@ class Update(threading.Thread):
 
 # Child Class to Update. Updates a single course in Canvas.
 class UpdateSingleCourse(Update):
-    def __init__(self, api_token, from_course_id, to_course_id, from_start_date, to_start_date, sb_start_week):
+    def __init__(self, api_token, from_course_id, to_course_id, from_start_date, to_start_date, sb_start_week, options, run_buttons):
         super().__init__()
         self._stop_event = threading.Event()
         self.api_token = api_token
@@ -258,6 +260,8 @@ class UpdateSingleCourse(Update):
         self.from_start_date = from_start_date
         self.to_start_date = to_start_date
         self.sb_start_week = sb_start_week
+        self.options = options
+        self.run_buttons = run_buttons
     
     # Update single course function
     def run(self):
@@ -268,7 +272,9 @@ class UpdateSingleCourse(Update):
 
         spring_break_status = self.check_spring_break_shift(from_course, to_course)
 
-        self.remove_title_spaces(to_course)
+        if self.options[0] == 1:
+            self.remove_title_spaces(to_course)
+
         self.sb_delete_module(to_course)
         self.change_module_names(to_course, self.to_start_date, spring_break_status)
         
@@ -277,50 +283,8 @@ class UpdateSingleCourse(Update):
         else:
             update_log("No Spring Break shift required.")
 
-        self.link_change_library_cmp(to_course) 
+        if self.options[1] == 1:
+            self.link_change_library_cmp(to_course) 
 
         update_log(f"{str(to_course.name)} update is complete!")
-
-# Child Class to Update. Updates many courses in Canvas.
-class UpdateMultiCourses(Update):
-    def __init__(self, api_token, to_start_date, csv_file, sb_start_week):
-        super().__init__()
-        self._stop_event = threading.Event()
-        self.api_token = api_token
-        self.to_start_date = to_start_date
-        self.csv_file = csv_file
-        self.sb_start_week = sb_start_week
-
-    # Update multiple courses function
-    def run(self):
-        canvas = Canvas(API_URL,self.api_token)
-
-        # Make data frame from spreadsheet
-        data_frame = pd.read_csv(self.csv_file)
-
-        # Loop through data frame to migrate each course
-        for index, row in data_frame.iterrows():
-            # Define variables from spreadsheet
-            from_course_id = row[data_frame.columns.get_loc("from_course_id")]
-            to_start_date = row[data_frame.columns.get_loc("old_start_date")]
-            to_course_id = row[data_frame.columns.get_loc("to_course_id")]
-
-            from_course = Canvas.get_course(self=canvas,course=from_course_id,use_sis_id=False)
-            to_course = Canvas.get_course(self=canvas,course=to_course_id,use_sis_id=False)
-
-            spring_break_status = self.check_spring_break_shift(from_course, to_course)
-
-            self.remove_title_spaces(to_course)
-            self.sb_delete_module(to_course)
-            self.change_module_names(to_course, to_start_date, spring_break_status)
-            
-            if spring_break_status != None:
-                self.spring_break_shift(to_course, to_start_date, spring_break_status, self.sb_start_week)
-            else:
-                update_log("No Spring Break shift required.") 
-
-            self.link_change_library_cmp(to_course)
-
-            update_log(f"{str(to_course.name)} update is complete!")
-
-        update_log("Updates complete.\n")
+        self.run_buttons.enable_run_buttons()

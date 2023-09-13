@@ -20,28 +20,28 @@ class App:
 
         # Create Access Token labelframe
         access_token_lf = ttk.Labelframe(self.frame, text="Access Token", padding=15)
-        access_token_lf.pack(fill=X, expand=YES, anchor=N)
+        access_token_lf.pack(fill=X, expand=YES, anchor=N, pady=(0,10))
 
         # Create FROM and TO Required Course Information labelframe
         required_course_fields_lf = ttk.Labelframe(self.frame, text="Required Course Information", padding=15)
-        required_course_fields_lf.pack(fill=X, expand=YES, anchor=N)
+        required_course_fields_lf.pack(fill=X, expand=YES, anchor=N, pady=(0,10))
 
         # Create Options labelframe
         options_lf = ttk.Labelframe(self.frame, text="Options", padding=15)
-        options_lf.pack(fill=X, expand=YES, anchor=N, pady=(0,0))
+        options_lf.pack(fill=X, expand=YES, anchor=N, pady=(0,15))
 
         # Create Run buttons frame
         run_button_row = ttk.Frame(self.frame)
-        run_button_row.pack(fill=X, expand=NO, pady=(0, 10))
+        run_button_row.pack(fill=X, expand=YES, pady=(5, 10))
 
         # Creates logging console labelframe
         console_frame = ttk.Labelframe(self.frame, text="Console", padding=15)
-        console_frame.pack(fill=X, expand=YES, anchor=N)
+        console_frame.pack(fill=BOTH, expand=YES, anchor=N)
         
         # Initialize all frames
         self.access_token = AccessToken(access_token_lf)
         self.options_input = Options(options_lf)
-        self.required_course_input = RequiredCourseInput(required_course_fields_lf)
+        self.required_course_input = RequiredCourseInput(required_course_fields_lf, self.access_token)
         self.run_buttons = RunButtons(run_button_row, self.root, self, self.access_token, self.options_input, self.required_course_input)
         self.console = ConsoleUi(console_frame)
 
@@ -62,7 +62,7 @@ class App:
             token = text.readlines()
         
         self.access_token.api_token_entry.insert(0, token)
-        self.run_buttons.check_api_token()
+        self.access_token.check_api_token()
 
     # Saves a simple log showing only what is in the app console
     def save_simple_log(self):
@@ -76,6 +76,7 @@ class App:
     def quit(self, *args):
         self.save_simple_log()
         self.root.destroy()
+
 
 # Main loop
 if __name__ == '__main__':
@@ -91,8 +92,10 @@ if __name__ == '__main__':
     # Creates the window for the application and runs it through .mainloop()
     root = ttk.Window(title=APP_TITLE,
                       themename=APP_TTK_THEME,
-                      resizable=['false','false'],
+                      resizable=['true','true'],
                       size=APP_TTK_WINDOW_SIZE)
+    root.minsize(APP_WIDTH, APP_HEIGHT)
+    
     try:
         root.iconbitmap("favicon.ico")
     except:
