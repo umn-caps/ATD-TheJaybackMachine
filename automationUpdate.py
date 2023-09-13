@@ -105,6 +105,9 @@ class Update(threading.Thread):
         
         update_log("Beginning changes to course id in links for Library Course Materials") 
 
+        
+        update_log("Beginning changes to course id in links for Library Course Materials") 
+
         to_pages = to_course.get_pages(per_page=200)
 
         for page in to_pages:
@@ -175,8 +178,10 @@ class Update(threading.Thread):
             
             if lock_date > week_start:
                 update_log(f"{assignment.name} OLD available from date: {str(assignment.lock_at_date)}") 
+                update_log(f"{assignment.name} OLD available from date: {str(assignment.lock_at_date)}") 
                 lock_date = self.sb_date_shift(lock_date, spring_break_status)
                 assignment.edit(assignment={'lock_at':lock_date})
+                update_log(f"{str(assignment.name)} NEW available from date: {str(assignment.lock_at_date)}")
                 update_log(f"{str(assignment.name)} NEW available from date: {str(assignment.lock_at_date)}")
                     
     # Function for Assignment Spring Break Due date shift
@@ -275,6 +280,9 @@ class UpdateSingleCourse(Update):
         if self.options[0] == 1:
             self.remove_title_spaces(to_course)
 
+        if self.options[0] == 1:
+            self.remove_title_spaces(to_course)
+
         self.sb_delete_module(to_course)
         self.change_module_names(to_course, self.to_start_date, spring_break_status)
         
@@ -283,6 +291,8 @@ class UpdateSingleCourse(Update):
         else:
             update_log("No Spring Break shift required.")
 
+        if self.options[1] == 1:
+            self.link_change_library_cmp(to_course) 
         if self.options[1] == 1:
             self.link_change_library_cmp(to_course) 
 
