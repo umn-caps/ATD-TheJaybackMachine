@@ -23,7 +23,6 @@ class AccessToken:
         # TTK Create and add API Access Token widget elements
         api_token_row = ttk.Frame(self.frame)
         api_token_row.pack(fill=X, expand=YES, pady=(0,0))
-        api_token_row.pack(fill=X, expand=YES, pady=(0,0))
 
         self.api_token = ttk.StringVar(frame)
 
