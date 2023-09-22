@@ -45,9 +45,7 @@ class App:
         self.run_buttons = RunButtons(run_button_row, self.root, self, self.access_token, self.options_input, self.required_course_input)
         self.console = ConsoleUi(console_frame)
 
-        # For Testing. Populates fields with variables from automationVariables if True. Set IS_TESTING to False to stop function
-        if IS_TESTING:
-            self.test_entries()
+        self.pull_access_token()
         
         # Quits program when exiting window or when clicking Ctrl+Q
         self.root.protocol('WM_DELETE_WINDOW', self.quit)
@@ -56,13 +54,20 @@ class App:
         # Don't know what this does. But it's important. Don't touch it unless you know better than me.
         signal.signal(signal.SIGINT, self.quit)
 
-    # Testing function. Pulls in data from automationVariables for data entry in the GUI
-    def test_entries(self):
-        with open('access_token.txt') as text:
-            token = text.readlines()
-        
-        self.access_token.api_token_entry.insert(0, token)
-        self.access_token.check_api_token()
+    # Pulls Access Token from file "access_token.txt". Access token needs to be on the firs line with no additional enters or spaces.
+    def pull_access_token(self):
+        access_token_file = "access_token.txt"
+
+        try: 
+            with open(access_token_file) as text:
+                token = text.readlines()
+            
+            update_log(f"Pulled Access Token from {access_token_file}")
+            self.access_token.api_token_entry.insert(0, token)
+            self.access_token.check_api_token()
+            
+        except:
+            pass
 
     # Saves a simple log showing only what is in the app console
     def save_simple_log(self):

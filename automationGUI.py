@@ -222,13 +222,18 @@ class RunButtons:
                                     command=self.close)
         self.close_btn.pack(side=RIGHT, padx=(10, 0))
 
+        self.clear_id_btn = ttk.Button(self.frame, 
+                                           text="Clear Course IDs", 
+                                           command=self.clear_ids)
+        self.clear_id_btn.pack(side=RIGHT, padx=(10, 0))
+
         self.start_update_btn = ttk.Button(self.frame, 
-                                           text="Start Updates", 
+                                           text="Run Update", 
                                            command=self.run_update)
         self.start_update_btn.pack(side=RIGHT, padx=(10, 0))
 
         self.start_migration_btn = ttk.Button(self.frame,
-                                              text="Start Migration", 
+                                              text="Run Migration", 
                                               command=self.run_migration)
         self.start_migration_btn.pack(side=RIGHT, padx=(10, 0))
 
@@ -268,6 +273,10 @@ class RunButtons:
             update_single_course = UpdateSingleCourse(api_token, from_course_id, to_course_id, from_start_date, to_start_date, sb_start_week, options, self)
             update_single_course.start()
 
+    def clear_ids(self):
+        self.course_input.from_course_entry.delete(0, END)
+        self.course_input.to_course_entry.delete(0, END)
+    
     # Checks API token before running migration or update     
     def check_api_token(self):
         if self.api_token_input.api_token_ok == False:

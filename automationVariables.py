@@ -17,6 +17,3 @@ LIBRARY_EXT_REGEX = '(?<=courses\/)\d{6,}(?=\/external_tools\/12142)'
 # GUI DateEntry 
 FROM_DATEENTRY_START_DATE = datetime.today()
 TO_DATEENTRY_START_DATE = datetime.today()
-
-# Test Variables
-IS_TESTING = False
