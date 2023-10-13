@@ -1,3 +1,6 @@
+import re
+import arrow
+
 from dateutil import parser
 from pprint import pprint
 
@@ -54,7 +57,6 @@ class AccessToken:
             self.api_token_ok = False
         
 
-
 # Initializes GUI fields for single course migration/update input fields
 class RequiredCourseInput:
     def __init__(self, frame, api_token_input):
@@ -73,16 +75,21 @@ class RequiredCourseInput:
         self.from_course_entry = ttk.Entry(from_input_row, textvariable=self.from_course)
         self.from_course_entry.pack(side=LEFT, fill=X, expand=YES)
 
-        self.from_start_date_label = ttk.Label(from_input_row, text="Start Date")
-        self.from_start_date_label.pack(side=LEFT, padx=(10, 10))
-
-        self.from_start_date_entry = ttk.DateEntry(from_input_row,startdate=FROM_DATEENTRY_START_DATE)
-        self.from_start_date_entry.pack(side=LEFT)
-
         self.check_from_course_btn = ttk.Button(from_input_row,
                                               text="Check", 
                                               command=lambda: self.check_course_name(self.from_course.get(), 0))
         self.check_from_course_btn.pack(side=LEFT, padx=(15, 0))
+
+        self.from_start_date_label = ttk.Label(from_input_row, text="Start Date")
+        self.from_start_date_label.pack(side=LEFT, padx=(10, 10))
+
+        self.from_start_date_entry = ttk.DateEntry(from_input_row,startdate=datetime.today(), width=10)
+        self.from_start_date_entry.pack(side=LEFT, fill=X, expand=YES, anchor=N)
+
+        #self.from_auto_date_btn = ttk.Button(from_input_row,
+                                              #text="Auto Date", 
+                                              #command=lambda: self.from_auto_date(self.from_course.get()))
+        #self.from_auto_date_btn.pack(side=LEFT, padx=(15, 0))
 
         # TTK Create and add TO Course widget elements
         to_input_row = ttk.Frame(self.frame)
@@ -92,18 +99,23 @@ class RequiredCourseInput:
         self.to_course_label.pack(side=LEFT, fill=X, padx=(20, 10))
 
         self.to_course_entry = ttk.Entry(to_input_row, textvariable=self.to_course)
-        self.to_course_entry.pack(side=LEFT, fill=X, expand=YES)    
+        self.to_course_entry.pack(side=LEFT, fill=X, expand=YES)
+        
+        self.check_api_token_btn = ttk.Button(to_input_row,
+                                              text="Check", 
+                                              command=lambda: self.check_course_name(self.to_course.get(), 1))
+        self.check_api_token_btn.pack(side=LEFT, padx=(15, 0))    
 
         self.to_start_date_label = ttk.Label(to_input_row, text="Start Date")
         self.to_start_date_label.pack(side=LEFT, padx=(10, 10))
         
-        self.to_start_date_entry = ttk.DateEntry(to_input_row,startdate=TO_DATEENTRY_START_DATE)
-        self.to_start_date_entry.pack(side=LEFT)
+        self.to_start_date_entry = ttk.DateEntry(to_input_row,startdate=datetime.today(), width=10)
+        self.to_start_date_entry.pack(side=LEFT, fill=X, expand=YES, anchor=N)
 
-        self.check_api_token_btn = ttk.Button(to_input_row,
-                                              text="Check", 
-                                              command=lambda: self.check_course_name(self.to_course.get(), 1))
-        self.check_api_token_btn.pack(side=RIGHT, padx=(15, 0))
+        #self.to_auto_date_btn = ttk.Button(to_input_row,
+                                           #text="Auto Date", 
+                                           #command=lambda: self.to_auto_date())
+        #self.to_auto_date_btn.pack(side=LEFT, padx=(15, 0))
      
     # Get FROM Course Start Date from Field formatted to datetime in US/Central Time
     def get_from_start_date(self):
@@ -135,11 +147,12 @@ class RequiredCourseInput:
         start_date = str(parser.parse(start_date))
         return start_date
     
-    # Checks the course name and print it in console
+    # Checks the course name and prints it in console
     def check_course_name(self, course_id, course_type):
         if course_id != "":
-            api_token = self.api_token_input.api_token.get()
-            canvas = Canvas(API_URL,api_token)
+            canvas = Canvas(API_URL,
+                            self.api_token_input.api_token.get())
+            
             course = Canvas.get_course(self=canvas, course=course_id, use_sis_id=False)
 
             if course_type == 0:
@@ -152,6 +165,35 @@ class RequiredCourseInput:
             else:
                 update_log("There is no course id entered for TO Course ID")
 
+    # Sets the date for FROM course according to the date listed in page "Course Start Date"
+    def from_auto_date(self,course_id):
+        if course_id != "":
+            regex_name = re.compile(r'Start Date', re.IGNORECASE) 
+            
+            canvas = Canvas(API_URL,
+                            self.api_token_input.api_token.get())
+            
+            course = Canvas.get_course(self=canvas, 
+                                       course=course_id, 
+                                       use_sis_id=False)
+        
+            to_pages = course.get_pages(per_page=200)
+            
+            for page in to_pages:
+                str(page.title)
+                if bool(regex_name.search(str(page.title))):
+                    todo_date = arrow.get(page.todo_date_date).to("US/Central")
+                    self.from_start_date_entry.configure(startdate=todo_date)
+                    update_log(f"Set FROM due date to {todo_date} based on date from {str(page.title)}")
+                    return
+            
+            update_log("Could not find \"Course Start Date\" page in course.")
+        else:
+            update_log("There is no course id entered for FROM Course ID")
+
+    # Sets the date for TO course
+    def to_auto_date():
+        pass
 
 # Initializes GUI fields for script options
 class Options:
@@ -242,15 +284,12 @@ class RunButtons:
         if self.check_api_token() == True and self.check_course_ids() == True:
             self.disable_run_buttons()
             
-            api_token = self.api_token_input.api_token.get()
-            
-            from_course_id = self.course_input.from_course.get()
-            from_start_date = self.course_input.get_from_start_date_str()
-
-            to_course_id = self.course_input.to_course.get()
-            to_start_date = self.course_input.get_to_start_date_str()
-            
-            migrate_single_course = MigrateSingleCourse(api_token, from_course_id, to_course_id, from_start_date, to_start_date, self)
+            migrate_single_course = MigrateSingleCourse(self.api_token_input.api_token.get(), 
+                                                        self.course_input.from_course.get(), 
+                                                        self.course_input.to_course.get(), 
+                                                        self.course_input.get_from_start_date_str(), 
+                                                        self.course_input.get_to_start_date_str(), 
+                                                        self)
             migrate_single_course.start()
  
     # Run Update script   
@@ -260,17 +299,15 @@ class RunButtons:
             
             update_log("Update beginning. Please wait...")
             
-            api_token = self.api_token_input.api_token.get()
             sb_start_week = int(self.options_input.sb_start_week.get())
             options = [self.options_input.remove_title_spaces_checkbtn_value.get(), self.options_input.library_links_checkbtn_value.get()]
 
-            from_course_id = self.course_input.from_course.get()
-            from_start_date = self.course_input.get_from_start_date_str()
-            
-            to_course_id = self.course_input.to_course.get()
-            to_start_date = self.course_input.get_to_start_date_str()
-            
-            update_single_course = UpdateSingleCourse(api_token, from_course_id, to_course_id, from_start_date, to_start_date, sb_start_week, options, self)
+            update_single_course = UpdateSingleCourse(self.api_token_input.api_token.get(), 
+                                                      self.course_input.from_course.get(), 
+                                                      self.course_input.to_course.get(), 
+                                                      self.course_input.get_from_start_date_str(), 
+                                                      self.course_input.get_to_start_date_str(), 
+                                                      sb_start_week, options, self)
             update_single_course.start()
 
     def clear_ids(self):
