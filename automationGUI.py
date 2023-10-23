@@ -336,11 +336,13 @@ class RunButtons:
 
     # Disables Migration and Update run buttons
     def enable_run_buttons(self):
+        self.clear_id_btn.config(state="normal")
         self.start_migration_btn.config(state="normal")
         self.start_update_btn.config(state="normal")
 
     # Enables Migration and Update run buttons
     def disable_run_buttons(self):
+        self.clear_id_btn.config(state="disabled")
         self.start_migration_btn.config(state="disabled")
         self.start_update_btn.config(state="disabled")
 

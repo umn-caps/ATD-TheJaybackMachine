@@ -279,22 +279,17 @@ class UpdateSingleCourse(Update):
 
         if self.options[0] == 1:
             self.remove_title_spaces(to_course)
-
-        if self.options[0] == 1:
-            self.remove_title_spaces(to_course)
-
-        self.sb_delete_module(to_course)
-        self.change_module_names(to_course, self.to_start_date, spring_break_status)
         
         if spring_break_status != None:
+            self.sb_delete_module(to_course)
             self.spring_break_shift(to_course, self.to_start_date, spring_break_status, self.sb_start_week)
         else:
             update_log("No Spring Break shift required.")
 
+        self.change_module_names(to_course, self.to_start_date, spring_break_status)
+
         if self.options[1] == 1:
-            self.link_change_library_cmp(to_course) 
-        if self.options[1] == 1:
-            self.link_change_library_cmp(to_course) 
+            self.link_change_library_cmp(to_course)
 
         update_log(f"{str(to_course.name)} update is complete!")
         self.run_buttons.enable_run_buttons()
