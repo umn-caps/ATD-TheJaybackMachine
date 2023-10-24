@@ -137,9 +137,10 @@ class Update(threading.Thread):
         return None
 
     # Function to create and publish the Spring Break module
-    def sp_create_module(self, to_course, to_start_date):
+    def sp_create_module(self, to_course, to_start_date, sb_start_week):
+
         week_span = datetime.fromisoformat(to_start_date)
-        week_span += timedelta(days=49)
+        week_span += timedelta(days=(sb_start_week-1)*7)
         week_span_end = week_span + timedelta(days=6)
         
         spring_break_title = str("Spring Break: " + week_span.strftime("%b %d") + " - " + week_span_end.strftime("%b %d"))
@@ -244,7 +245,7 @@ class Update(threading.Thread):
             update_log("Completed shifting dates from Spring Break removal") 
         
         elif spring_break_status == 1:
-            self.sp_create_module(to_course, to_start_date)
+            self.sp_create_module(to_course, to_start_date, sb_start_week)
             
             for assignment in to_assignments:
                 self.sb_assignment_lock_at_shift(assignment, week_start, spring_break_status)
@@ -276,17 +277,19 @@ class UpdateSingleCourse(Update):
         to_course = Canvas.get_course(self=canvas,course=self.to_course_id,use_sis_id=False)
 
         spring_break_status = self.check_spring_break_shift(from_course, to_course)
+        
+        if spring_break_status != None:
+            self.sb_delete_module(to_course)
+        
+        self.change_module_names(to_course, self.to_start_date, spring_break_status)
 
         if self.options[0] == 1:
             self.remove_title_spaces(to_course)
         
         if spring_break_status != None:
-            self.sb_delete_module(to_course)
             self.spring_break_shift(to_course, self.to_start_date, spring_break_status, self.sb_start_week)
         else:
             update_log("No Spring Break shift required.")
-
-        self.change_module_names(to_course, self.to_start_date, spring_break_status)
 
         if self.options[1] == 1:
             self.link_change_library_cmp(to_course)
