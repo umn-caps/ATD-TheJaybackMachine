@@ -123,6 +123,26 @@ class Update(threading.Thread):
                                 page.edit(wiki_page = {'body':str(soup)})
                                 update_log(f"Changed course id in link for Library Course Materials for {str(current_page.title)}")       
     
+    # Checks for empty 0% weight "Assignments" and "Imported Assignments" assignment groups and deletes them
+    def delete_empty_assignment_group(self, to_course):
+        
+        def assignment_count(course):
+            assignments = course.get_assignments_for_group(assignment_group)
+            assignment_num = 0
+            
+            for assignment in assignments:
+                    assignment_num = assignment_num + 1
+            
+            return assignment_num
+
+        assignment_groups = to_course.get_assignment_groups(per_page=50)
+
+        for assignment_group in assignment_groups:
+            if assignment_group.name == "Assignments" or assignment_group.name == "Imported Assignments":
+                if assignment_group.group_weight == 0 and assignment_count(to_course) == 0:
+                    assignment_group.delete()
+                    update_log(f"Deleted empty 0% weight assignment group: \"{assignment_group.name}\"")
+
     # Checks to see if Spring Break Shift. Returns 0 to Remove, 1 to Add, None if Not Needed
     def check_spring_break_shift(self, from_course, to_course):
         from_course_name = str(from_course.name)
@@ -276,6 +296,8 @@ class UpdateSingleCourse(Update):
         from_course = Canvas.get_course(self=canvas,course=self.from_course_id,use_sis_id=False)
         to_course = Canvas.get_course(self=canvas,course=self.to_course_id,use_sis_id=False)
 
+        self.delete_empty_assignment_group(to_course)
+        
         spring_break_status = self.check_spring_break_shift(from_course, to_course)
         
         if spring_break_status != None:
