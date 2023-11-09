@@ -59,7 +59,7 @@ class Update(threading.Thread):
         update_log("DONE clearing extra spaces from titles of all modules, pages, assignments, and quizzes.") 
 
     # Change Module Names
-    def change_module_names(self, to_course, to_start_date, spring_break_status:int):
+    def change_module_names(self, to_course, to_start_date, spring_break_status:int, sb_start_week:int):
         to_modules = to_course.get_modules()
         
         #Checks through all course modules to change the name
@@ -73,7 +73,7 @@ class Update(threading.Thread):
                 add_days = int(index) * 7
                 week_span = datetime.fromisoformat(str(to_start_date))
 
-                if index > 6 and spring_break_status == 1:
+                if index > (sb_start_week - 2) and spring_break_status == 1:
                         week_span = week_span + timedelta(days=7)
 
                 # Creates datetimes for beginning of the week and end of the week
@@ -157,7 +157,7 @@ class Update(threading.Thread):
         return None
 
     # Function to create and publish the Spring Break module
-    def sp_create_module(self, to_course, to_start_date, sb_start_week):
+    def sb_create_module(self, to_course, to_start_date, sb_start_week):
 
         week_span = datetime.fromisoformat(to_start_date)
         week_span += timedelta(days=(sb_start_week-1)*7)
@@ -165,7 +165,7 @@ class Update(threading.Thread):
         
         spring_break_title = str("Spring Break: " + week_span.strftime("%b %d") + " - " + week_span_end.strftime("%b %d"))
         spring_break_title = re.sub(r'0+(.+)', r'\1', spring_break_title)
-        spring_break_module = to_course.create_module(module = {'name' : spring_break_title, 'position' : 8})
+        spring_break_module = to_course.create_module(module = {'name' : spring_break_title, 'position' : sb_start_week})
         spring_break_module.edit(module = {'published' : True})
         
         spring_break_module_item = spring_break_module.create_module_item(module_item = {'title' : 'There are no assignments due this week', 'type' : 'SubHeader'})
@@ -265,7 +265,7 @@ class Update(threading.Thread):
             update_log("Completed shifting dates from Spring Break removal") 
         
         elif spring_break_status == 1:
-            self.sp_create_module(to_course, to_start_date, sb_start_week)
+            self.sb_create_module(to_course, to_start_date, sb_start_week)
             
             for assignment in to_assignments:
                 self.sb_assignment_lock_at_shift(assignment, week_start, spring_break_status)
@@ -303,7 +303,7 @@ class UpdateSingleCourse(Update):
         if spring_break_status != None:
             self.sb_delete_module(to_course)
         
-        self.change_module_names(to_course, self.to_start_date, spring_break_status)
+        self.change_module_names(to_course, self.to_start_date, spring_break_status, self.sb_start_week)
 
         if self.options[0] == 1:
             self.remove_title_spaces(to_course)

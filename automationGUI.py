@@ -218,7 +218,7 @@ class Options:
 
         self.sb_weeks_to_start_entry = ttk.Spinbox(row1, textvariable=self.sb_start_week,
                                                    width=10,
-                                                   from_=0, to=15,
+                                                   from_=4, to=12,
                                                    wrap=True)
         self.sb_weeks_to_start_entry.pack(side=LEFT, fill=X)
         self.sb_weeks_to_start_entry["state"] = "disabled"
@@ -247,6 +247,7 @@ class Options:
             self.sb_weeks_to_start_entry["state"] = "normal"
         else:
             self.sb_weeks_to_start_entry["state"] = "disabled"
+            self.sb_start_week.set("8")
 
 
 # Initializes GUI buttons that will run an API Token check, the migration script and the update script
