@@ -26,8 +26,8 @@ class App:
         required_course_fields_lf = ttk.Labelframe(self.frame, text="Required Course Information", padding=15)
         required_course_fields_lf.pack(fill=X, expand=YES, anchor=N, pady=(0,10))
 
-        # Create Options labelframe
-        options_lf = ttk.Labelframe(self.frame, text="Options", padding=15)
+        # Create Update Options labelframe
+        options_lf = ttk.Labelframe(self.frame, text="Update Options", padding=15)
         options_lf.pack(fill=X, expand=YES, anchor=N, pady=(0,15))
 
         # Create Run buttons frame
