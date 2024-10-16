@@ -163,8 +163,14 @@ class Update(threading.Thread):
         week_span += timedelta(days=(sb_start_week-1)*7)
         week_span_end = week_span + timedelta(days=6)
         
-        spring_break_title = str("Spring Break: " + week_span.strftime("%b %d") + " - " + week_span_end.strftime("%b %d"))
-        spring_break_title = re.sub(r'0+(.+)', r'\1', spring_break_title)
+        week_span = week_span.strftime("%b %d")
+        week_span = re.sub(r'0+(.+)', r'\1', week_span)
+
+        week_span_end = week_span_end.strftime("%b %d")
+        week_span_end = re.sub(r'0+(.+)', r'\1', week_span_end)
+        
+        spring_break_title = str("Spring Break: " + week_span + " - " + week_span_end)
+        
         spring_break_module = to_course.create_module(module = {'name' : spring_break_title, 'position' : sb_start_week})
         spring_break_module.edit(module = {'published' : True})
         
