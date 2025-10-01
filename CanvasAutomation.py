@@ -54,7 +54,7 @@ class App:
         # Don't know what this does. But it's important. Don't touch it unless you know better than me.
         signal.signal(signal.SIGINT, self.quit)
 
-    # Pulls Access Token from file "access_token.txt". Access token needs to be on the firs line with no additional enters or spaces.
+    # Pulls Access Token from file "access_token.txt". Access token needs to be on the first line with no additional enters or spaces.
     def pull_access_token(self):
         access_token_file = "access_token.txt"
 

@@ -105,9 +105,6 @@ class Update(threading.Thread):
         
         update_log("Beginning changes to course id in links for Library Course Materials") 
 
-        
-        update_log("Beginning changes to course id in links for Library Course Materials") 
-
         to_pages = to_course.get_pages(per_page=200)
 
         for page in to_pages:
