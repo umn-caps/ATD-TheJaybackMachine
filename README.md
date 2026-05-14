@@ -52,7 +52,7 @@ According to [the CanvasAPI GitHub page](https://github.com/ucfopen/canvasapi) â
 [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) "is a Python library for pulling data out of HTML and XML files." It is used in the script to find and replace the page id in URLs in pages for the Library Course page.
 
 ## Credits
-* Avery Pierce-McGovern <mcgovera@umn.edu>, Project Lead/Project Manager
-* Paul McLagan <mclag011@umn.edu>, Project Lead/Lead Programmer and Designer
-* Annika Moe <moex0125@umn.edu>, Key Developer 
-* Nichole Salinas <sali0137@umn.edu>, Developer
+* Avery Pierce-McGovern, Project Lead/Project Manager
+* Paul McLagan, Project Lead/Lead Programmer and Designer
+* Annika Moe, Key Developer 
+* Nichole Salinas, Developer
