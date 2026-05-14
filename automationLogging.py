@@ -3,7 +3,8 @@ import queue
 
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from ttkbootstrap import ScrolledText, Frame
+from ttkbootstrap import Frame #added this for the Frame class used in ConsoleUi
+from tkinter.scrolledtext import ScrolledText # This is the ScrolledText widget from tkinter, not ttkbootstrap. It is used in ConsoleUi to display logs.
 
 # Creates logger for the instance
 logger = logging.getLogger(__name__)
