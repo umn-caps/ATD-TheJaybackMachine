@@ -41,9 +41,9 @@ class AccessToken:
     def check_api_token(self):
         if len(self.api_token_entry.get()) != 0:
             canvas = Canvas(API_URL, self.api_token.get())
-            current_user = canvas.get_current_user()
             
             try:
+                current_user = canvas.get_current_user()
                 update_log(f"Hello {current_user.name}! You are ready to use the scripts.")
                 self.api_token_entry.config(bootstyle = "success")
                 self.api_token_ok = True
