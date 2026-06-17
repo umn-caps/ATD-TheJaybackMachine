@@ -1,3 +1,5 @@
+import sys
+import subprocess
 import signal
 import os
 
@@ -9,6 +11,33 @@ from ttkbootstrap.constants import *
 from automationVariables import *
 from automationGUI import AccessToken, Options, RunButtons, RequiredCourseInput
 from automationLogging import *
+
+# Enforce the Exact Python Version (3.11.4)
+REQUIRED_VERSION = (3, 11, 4)
+
+if sys.version_info[:3] != REQUIRED_VERSION:
+    sys.exit(
+        f"Error: This script requires exactly Python 3.11.4.\n"
+        f"You are running: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+    )
+
+# Automatically Install Dependencies (Including ttkbootstrap 1.10.1)
+REQUIRED_PACKAGES = [
+    "requests==2.31.0", 
+    "canvasapi==3.2.0", 
+    "ttkbootstrap==1.10.1",
+    "arrow==1.2.3"
+]
+
+for package in REQUIRED_PACKAGES:
+    try:
+        # Extract the base package name (e.g., 'ttkbootstrap' from 'ttkbootstrap==1.10.1')
+        pkg_name = package.split("==")[0]
+        __import__(pkg_name)
+    except ImportError:
+        print(f"Installing missing dependency: {package}...")
+        # Installs it specifically to the Python 3.11.4 environment currently running
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 # App Class. Lays out frames and labelframes for the GUI. 
 class App:
