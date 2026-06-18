@@ -89,11 +89,16 @@ class App:
 
         try: 
             with open(access_token_file) as text:
-                token = text.readlines()
+                token = text.read().strip()
             
-            update_log(f"Pulled Access Token from {access_token_file}")
-            self.access_token.api_token_entry.insert(0, token)
-            self.access_token.check_api_token()
+            # Check if the token actually has content
+            if token:
+                update_log(f"Pulled Access Token from {access_token_file}")
+                
+                # Clear and insert the token into the UI
+                self.access_token.api_token_entry.delete(0, 'end')
+                self.access_token.api_token_entry.insert(0, token)
+                self.access_token.check_api_token()
             
         except:
             pass
