@@ -233,7 +233,7 @@ class Options:
         self.remove_title_spaces_checkbtn.state(['!alternate'])
 
         # Change Library Course Page Links Option
-        self.library_links_checkbtn_value = ttk.IntVar(value=1)
+        self.library_links_checkbtn_value = ttk.IntVar(value=0)
 
         self.library_links_checkbtn = ttk.Checkbutton(row1, text="Change Library Course Page Links",
                                                       onvalue=1, offvalue=0,
