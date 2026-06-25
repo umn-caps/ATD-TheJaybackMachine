@@ -83,7 +83,7 @@ class RequiredCourseInput:
         self.from_start_date_label = ttk.Label(from_input_row, text="Start Date")
         self.from_start_date_label.pack(side=LEFT, padx=(10, 10))
 
-        self.from_start_date_entry = ttk.DateEntry(from_input_row,startdate=datetime.today(), width=10)
+        self.from_start_date_entry = ttk.DateEntry(from_input_row,startdate=datetime.today(), dateformat="%m/%d/%Y", width=10)
         self.from_start_date_entry.pack(side=LEFT, fill=X, expand=YES, anchor=N)
 
         #self.from_auto_date_btn = ttk.Button(from_input_row,
@@ -109,7 +109,7 @@ class RequiredCourseInput:
         self.to_start_date_label = ttk.Label(to_input_row, text="Start Date")
         self.to_start_date_label.pack(side=LEFT, padx=(10, 10))
         
-        self.to_start_date_entry = ttk.DateEntry(to_input_row,startdate=datetime.today(), width=10)
+        self.to_start_date_entry = ttk.DateEntry(to_input_row,startdate=datetime.today(), dateformat="%m/%d/%Y", width=10)
         self.to_start_date_entry.pack(side=LEFT, fill=X, expand=YES, anchor=N)
 
         #self.to_auto_date_btn = ttk.Button(to_input_row,
@@ -121,7 +121,7 @@ class RequiredCourseInput:
     def get_from_start_date(self):
         start_date = self.from_start_date_entry.entry.get()
         update_log("DateEntry FROM Date string: " + str(start_date))
-        start_date = datetime.strptime(start_date, '%m/%d/%y')
+        start_date = datetime.strptime(start_date, '%m/%d/%Y')
         start_date = start_date.replace(hour=0, minute=0, second=0, tzinfo='US/Central')
         update_log("Datetime: " + str(start_date) + " " + str(start_date.tzname))
         return start_date
@@ -130,7 +130,7 @@ class RequiredCourseInput:
     def get_to_start_date(self):
         start_date = self.to_start_date_entry.entry.get()
         update_log("DateEntry TO Date string: " + str(start_date))
-        start_date = datetime.strptime(start_date, '%m/%d/%y')
+        start_date = datetime.strptime(start_date, '%m/%d/%Y')
         start_date = start_date.replace(hour=0, minute=0, second=0, tzinfo='US/Central')
         update_log("Datetime: " + str(start_date) + " " + str(start_date.tzname))
         return start_date
