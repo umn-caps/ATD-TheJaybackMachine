@@ -12,13 +12,16 @@ from automationVariables import *
 from automationGUI import AccessToken, Options, RunButtons, RequiredCourseInput
 from automationLogging import *
 
-# Enforce the Exact Python Version (3.11.4)
-REQUIRED_VERSION = (3, 11, 4)
+# Enforce Python versions between 3.11.4 and 3.11.9 (inclusive)
+MIN_VERSION = (3, 11, 4)
+MAX_VERSION = (3, 11, 9)
 
-if sys.version_info[:3] != REQUIRED_VERSION:
+current_version = sys.version_info[:3]
+
+if not (MIN_VERSION <= current_version <= MAX_VERSION):
     sys.exit(
-        f"Error: This script requires exactly Python 3.11.4.\n"
-        f"You are running: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+        f"Error: This script requires a Python version between 3.11.4 and 3.11.9.\n"
+        f"You are running: {current_version[0]}.{current_version[1]}.{current_version[2]}"
     )
 
 # Automatically Install Dependencies (Including ttkbootstrap 1.10.1)
