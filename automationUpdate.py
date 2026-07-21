@@ -300,6 +300,10 @@ class UpdateSingleCourse(Update):
         to_course = Canvas.get_course(self=canvas,course=self.to_course_id,use_sis_id=False)
 
         self.delete_empty_assignment_group(to_course)
+
+        # Runs function to remove spaces in the titles from modules, pages and activities. Needs to be run before change_module_names to prevent issues with extra spaces.
+        if self.options[0] == 1:
+            self.remove_title_spaces(to_course)
         
         spring_break_status = self.check_spring_break_shift(from_course, to_course)
         
@@ -307,9 +311,6 @@ class UpdateSingleCourse(Update):
             self.sb_delete_module(to_course)
         
         self.change_module_names(to_course, self.to_start_date, spring_break_status, self.sb_start_week)
-
-        if self.options[0] == 1:
-            self.remove_title_spaces(to_course)
         
         if spring_break_status != None:
             self.spring_break_shift(to_course, self.to_start_date, spring_break_status, self.sb_start_week)
